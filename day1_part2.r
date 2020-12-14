@@ -18,7 +18,30 @@ input <- read_csv(
 , col_names = "entry"
 )
 
-answer <- 0
+cross_sum <- input %>%
+  merge(
+    rename(
+      input
+    , entry2 = entry
+    )
+  ) %>%
+  mutate(
+    entry_sum = entry + entry2
+  , complement = 2020 - entry_sum
+  )
+
+answer <- cross_sum %>%
+  inner_join(
+    rename(
+      input
+    , entry3 = entry
+    )
+  , by = c("complement" = "entry3")
+  ) %>%
+  mutate(answer = entry * entry2 * complement) %>%
+  distinct(answer) %>% {
+    .$answer
+  }
 
 write_lines(
   answer
