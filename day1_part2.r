@@ -5,7 +5,7 @@ project_directory <- rprojroot::find_root(
 )
 
 day <- 1
-part <- 1
+part <- 2
 
 input <- read_csv(
   paste0(
@@ -18,17 +18,27 @@ input <- read_csv(
 , col_names = "entry"
 )
 
-answer <- input %>%
-  mutate(
-    complement = 2020 - entry
+cross_sum <- input %>%
+  merge(
+    rename(
+      input
+    , entry2 = entry
+    )
   ) %>%
+  mutate(
+    entry_sum = entry + entry2
+  , complement = 2020 - entry_sum
+  )
+
+answer <- cross_sum %>%
   inner_join(
-    input
-  , by = c("complement" = "entry")
+    rename(
+      input
+    , entry3 = entry
+    )
+  , by = c("complement" = "entry3")
   ) %>%
-  mutate(
-    answer = complement * entry
-  ) %>%
+  mutate(answer = entry * entry2 * complement) %>%
   distinct(answer) %>% {
     .$answer
   }
