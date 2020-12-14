@@ -6,28 +6,42 @@ project_directory <- rprojroot::find_root(
 
 day <- 1
 part <- 1
-day_part <- paste0("day", day, "_", "part", part)
 
 input <- read_csv(
   paste0(
     project_directory
   , "/"
-  , "inputs/"
-  , day_part
+  , "inputs/day"
+  , day
   , ".txt"
   )
 , col_names = "entry"
 )
 
-answer <- 2
+answer <- input %>%
+  mutate(
+    complement = 2020 - entry
+  ) %>%
+  inner_join(
+    input
+  , by = c("complement" = "entry")
+  ) %>%
+  mutate(
+    answer = complement * entry
+  ) %>%
+  distinct(answer) %>% {
+    .$answer
+  }
 
 write_lines(
   answer
 , paste0(
     project_directory
   , "/"
-  , "answers/"
-  , day_part
+  , "answers/day"
+  , day
+  , "_part"
+  , part
   , ".txt"
   )
 )
