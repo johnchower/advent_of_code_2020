@@ -16,9 +16,7 @@ input <- read_lines(
   , ".txt"
   )
 , na = ""
-)
-
-valid_passports <- input %>%
+) %>%
   strsplit(" ") %>%
   unlist() %>%
   {data.frame(key_value = .)} %>%
@@ -30,15 +28,10 @@ valid_passports <- input %>%
     key_value
   , into = c("key", "value")
   , sep = ":"
-  ) %>%
-  mutate(
-    required_field = key != "cid"
-  ) %>%
-  group_by(passport_id) %>%
-  summarise(
-    valid_passport = sum(required_field) == 7
-  ) %>%
-  ungroup()
+  )
+
+valid_passports <- input %>%
+  mutate(valid_passport = TRUE)
 
 answer <- sum(valid_passports$valid_passport)
   
