@@ -7,7 +7,7 @@ project_directory <- rprojroot::find_root(
 day <- 4
 part <- 1
 
-input <- read_csv(
+input <- read_lines(
   paste0(
     project_directory
   , "/"
@@ -15,8 +15,30 @@ input <- read_csv(
   , day
   , ".txt"
   )
-, col_names = "entry"
+, na = ""
 )
+
+input %>% {.[1:30]} %>%
+  strsplit(" ") %>%
+  unlist() %>%
+  {data.frame(key_value = .)} %>%
+  mutate(
+    passport_id = cumsum(is.na(key_value))
+  ) %>%
+  filter(!is.na(key_value)) %>%
+  separate(
+    key_value
+  , into = c("key", "value")
+  , sep = ":"
+  ) %>%
+  mutate(
+    required_field = key != "cid"
+  ) %>%
+  group_by(passport_id) %>%
+  summarise(
+    valid_passport = sum(required_field) == 7
+  ) %>%
+  ungroup()
 
 answer <- input %>%
   mutate(
