@@ -6,14 +6,13 @@ project_directory <- rprojroot::find_root(
 
 day <- 1
 part <- 1
-day_part <- paste0("day", day, "_", "part", part)
 
 input <- read_csv(
   paste0(
     project_directory
   , "/"
-  , "inputs/"
-  , day_part
+  , "inputs/day"
+  , day
   , ".txt"
   )
 , col_names = "entry"
@@ -39,8 +38,10 @@ write_lines(
 , paste0(
     project_directory
   , "/"
-  , "answers/"
-  , day_part
+  , "answers/day"
+  , day
+  , "_part"
+  , part
   , ".txt"
   )
 )
