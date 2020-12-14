@@ -5,7 +5,7 @@ project_directory <- rprojroot::find_root(
 )
 
 day <- 4
-part <- 1
+part <- 2
 
 input <- read_lines(
   paste0(
@@ -16,7 +16,9 @@ input <- read_lines(
   , ".txt"
   )
 , na = ""
-) %>%
+)
+
+valid_passports <- input %>%
   strsplit(" ") %>%
   unlist() %>%
   {data.frame(key_value = .)} %>%
@@ -28,9 +30,7 @@ input <- read_lines(
     key_value
   , into = c("key", "value")
   , sep = ":"
-  )
-
-valid_passports <- input %>%
+  ) %>%
   mutate(
     required_field = key != "cid"
   ) %>%
