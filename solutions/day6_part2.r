@@ -5,7 +5,7 @@ project_directory <- rprojroot::find_root(
 )
 
 day <- 6
-part <- 1
+part <- 2
 
 input <- read_lines(
   paste0(
@@ -17,7 +17,7 @@ input <- read_lines(
   )
 )
 
-tibble(
+answer <- tibble(
   yes_answers = input
 ) %>%
   mutate(
@@ -25,14 +25,12 @@ tibble(
   ) %>%
   filter(yes_answers != "") %>%
   group_by(group_id) %>%
-  nest() %>%
-  mutate(
-    yes_answers = map(data, ~ .x$yes_answers)
-  ) %>% {
-    .$yes_answers
+  nest() %>% {
+    .$data
   } %>%
+  map(~ .x$yes_answers) %>%
   map(~ strsplit(.x, "")) %>%
-  map(~ Reduce(intersect, .x)) %>%
+  map(~ reduce(intersect, .x)) %>%
   map(length) %>%
   unlist() %>%
   sum()
