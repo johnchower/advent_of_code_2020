@@ -7,7 +7,7 @@ project_directory <- rprojroot::find_root(
 day <- 6
 part <- 1
 
-input <- read_csv(
+input <- read_lines(
   paste0(
     project_directory
   , "/"
@@ -15,23 +15,27 @@ input <- read_csv(
   , day
   , ".txt"
   )
-, col_names = "entry"
 )
 
-answer <- input %>%
+answer <- tibble(
+  yes_answers = input
+) %>%
   mutate(
-    complement = 2020 - entry
+    group_id = cumsum(yes_answers == "")
   ) %>%
-  inner_join(
-    input
-  , by = c("complement" = "entry")
-  ) %>%
-  mutate(
-    answer = complement * entry
-  ) %>%
-  distinct(answer) %>% {
-    .$answer
-  }
+  filter(yes_answers != "") %>%
+  group_by(group_id) %>%
+  summarise(
+    yes_answers = paste(yes_answers, collapse = "")
+  ) %>% {
+    .$yes_answers
+  } %>%
+  map(~ strsplit(.x, "")) %>%
+  map(unlist) %>%
+  map(unique) %>%
+  map(length) %>%
+  unlist() %>%
+  sum()
 
 write_lines(
   answer
