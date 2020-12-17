@@ -31,7 +31,7 @@ test_input <- read_lines(
   )
 )
 
-input_clean <- test_input %>% {
+input_clean <- input %>% {
   tibble(rule = .) 
 } %>%
   mutate(
@@ -98,7 +98,7 @@ answer <- power_list %>%
   map(sum) %>%
   unlist() %>%
   sum()
-  
+
 part <- 2
 write_lines(
   answer
