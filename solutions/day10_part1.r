@@ -1,5 +1,4 @@
 library(tidyverse)
-library(igraph)
 
 project_directory <- rprojroot::find_root(
   criterion = rprojroot::has_dir(".git")
@@ -29,6 +28,20 @@ test_input <- read_lines(
   , ".txt"
   )
 )
+
+input_clean <- input %>%
+  as.integer() %>%
+  sort() %>% {
+    c(0, ., max(.) + 3)
+  }
+
+answer <- data.frame(joltages = input_clean) %>%
+  mutate(diff = c(diff(joltages), NA)) %>%
+  filter(!is.na(diff)) %>%
+  group_by(diff) %>%
+  summarise(n_diff = n()) %>%
+  {.$n_diff} %>%
+  prod()
 
 write_lines(
   answer
